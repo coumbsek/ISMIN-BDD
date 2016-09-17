@@ -1,0 +1,11 @@
+Select Groupe, COUNT(distinct Num_Et) as nb_etu from Etudiant et where et.annee=2 group by groupe order by groupe;
+Select et.Num_et, et.Nom_et, et.prenom_et, code, COUNT(DISTINCT num_prof) from Etudiant et, Enseignt en where annee=2 and et.num_et=en.num_et group by et.num_et, et.nom_et, et.prenom_et, code order by code;
+Select Ville_prof, count(nom_prof) from prof group by ville_prof having count(nom_prof)>3;
+Select DISTINCT p.nom_prof, et.annee, count(distinct en.num_et) from prof p, enseignt en, etudiant et where et.num_et=en.num_et and p.num_prof=en.num_prof group by p.nom_prof, et.annee order by et.annee,p.nom_prof;
+Select p.num_prof, p.nom_prof, count(distinct libelle) as nb_mat from prof p, matiere m , enseignt en where (p.num_prof in (select resp from matiere)) and m.code=en.code and p.num_prof=en.num_prof group by p.num_prof, p.nom_prof order by p.num_prof;
+--Select p.num_prof, p.nom_prof, count(distinct libelle) as nb_mat from prof p, matiere m , enseignt en where (p.num_prof in (select resp from matiere)) and (m.code=en.code and p.num_prof=en.num_prof) group by p.num_prof, p.nom_prof order by p.num_prof;
+Select et.groupe, AVG(Note_Test) from Notation n, Etudiant et where n.code='SI' and et.num_et=n.num_et group by et.annee, et.groupe having et.annee=2 order by et.groupe;
+SELECT Distinct p.nom_prof, p.prenom_prof, COUNT(distinct en.code) from Prof p, Enseignt en where p.num_prof=en.num_prof and p.nom_prof!='Nocera' group by p.nom_prof, p.prenom_prof having count(distinct en.code)=(select count(distinct en.code) from Prof p, Enseignt en where p.num_prof=en.num_prof and p.nom_prof='Nocera');
+Select et.groupe from Etudiant et, Matiere m, Notation n where et.annee=2 and m.libelle Like '%SI' and m.code=n.code and et.num_et=n.num_et group by et.groupe having COUNT(et.num_et)>=2 and max(n.note_test)>(Select MAX(n.note_test) from Etudiant et, Matiere m, Notation n where et.annee=2 and et.groupe=3 and m.libelle Like '%SI' and m.code=n.code and et.num_et=n.num_et group by et.annee, et.groupe);
+
+Select p.num_prof, p.nom_prof, count(distinct en.code) as nb_mat from enseignt en right OUTER JOIN prof p ON p.num_prof=en.num_prof inner join matiere m on m.resp=p.num_prof group by p.num_prof, p.nom_prof order by p.num_prof;

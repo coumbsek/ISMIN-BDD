@@ -1,0 +1,26 @@
+SELECT NOM_PROF, PRENOM_PROF FROM PROF WHERE VILLE_PROF LIKE '%Aix%';
+SELECT * FROM Matiere WHERE Discipline LIKE '%Info%';
+SELECT * FROM Etudiant WHERE NOM_et LIKE 'D%' ORDER BY Nom_Et DESC;
+SELECT Discipline, Libelle, h_tp_prev, H_COurs_prev FROM Matiere WHERE Discipline!='Communication' AND Discipline!='Gestion' ORDER BY Discipline;--, Libelle;
+SELECT Code, Libelle FROM matiere where Resp is null;
+SELECT Note_Test, Code From Etudiant E, Notation n where e.num_et=n.num_et and e.nom_et = 'Rocchi'and e.prenom_et='Stephane' ORDER BY Note_Test DESC;
+SELECT distinct m.Code, Libelle From Prof p, Matiere m, Enseignt e where p.num_prof=e.num_prof and e.code=m.code and p.nom_prof='Boitard';
+SELECT Groupe From Etudiant et, Enseignt en, Prof p where et.annee=2 and en.num_prof=p.num_prof and p.nom_prof='Laporte' and et.num_et=en.num_et;
+Select distinct et.nom_et from Etudiant et, Enseignt en, Matiere m where en.num_prof=m.resp and et.num_et=en.num_et and m.resp is not null ORDER BY et.nom_et;
+Select distinct et.nom_et from Etudiant et, Enseignt en, Matiere m where en.num_prof=m.resp and et.num_et=en.num_et and m.resp is not null and en.code = m.code ORDER BY et.nom_et;
+SELECT COUNT(distinct num_prof) from Prof;
+SELECT TRUNC(AVG(Note_CC),6) from notation where code='PRL';
+SELECT COUNT(distinct num_prof) from Etudiant et, Enseignt en where et.num_et=en.num_et and et.nom_et='Lyon' ;
+Select AVG((Note_CC*Coeff_CC+Note_Test*Coeff_Test)/(Coeff_CC+Coeff_Test)) from Matiere m, Notation  n where m.libelle='Prolog' and m.code=n.code;
+SELECT LEAST(MIN(Coeff_CC),MIN(Coeff_Test)) from Matiere;
+Select Libelle from matiere m where m.coeff_Test=(SELECT MIN(Coeff_Test) from matiere);
+SELECT AVG((Note_CC*Coeff_CC+Note_Test*Coeff_Test)/(Coeff_CC+Coeff_Test)) from Notation n, Etudiant e, Matiere m where n.num_et=e.num_et and e.nom_et='Levy' and m.code=n.code;
+Select libelle from matiere m, Notation n where n.Code=m.code and n.Note_Test=(Select MAX(Note_Test) from Notation);
+Select Nom_Et from Etudiant et, Notation n where n.num_et=et.num_et and n.Note_Test=(Select MAX(Note_Test) from Notation);
+Select Nom_Et, Num_Et from Etudiant e Where e.Ville_Et Like 'Aix%' or e.ville_Et Like 'Marseille' ORDER BY e.nom_et;
+Select Libelle from Matiere m, Prof p where p.MAT_SPEC=m.CODE ORDER BY Libelle;
+Select Distinct Libelle from Matiere m, Prof p where m.CODE!=ALL(SELECT MAT_SPEC from Prof) ORDER BY Libelle;
+Select Nom_Et, Num_Et from Etudiant e where e.Ville_Et Like 'Aix%'
+	UNION Select Nom_Et, Num_Et from Etudiant e where e.Ville_Et Like 'Marseille%';
+SELECT Libelle from Matiere where code in (Select Code from MATIERE INTERSECT select distinct mat_spec from prof);
+SELECT Libelle from MATIERE where code!=all (Select Code from Matiere intersect select distinct mat_spec from prof);
