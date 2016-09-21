@@ -1,0 +1,1 @@
+Select p.nom_prof, p.prenom_prof from prof p, enseignt en, etudiant et where and not exists(select et.num_et from etudiant et where et.annee=2 and et.groupe=1 and not exists(select * from enseignt en where en.num_et=et.num_et));
