@@ -1,7 +1,9 @@
 Select p.nom_prof, count(distinct m.libelle) from prof p, matiere m, enseignt en where m.resp = p.num_prof  and en.num_prof = m.resp group by p.nom_prof order by p.nom_prof;
---Select count(distinct en.num_et) as et_note from notation n, enseignt en, etudiant et where en.num_et = n.num_et and en.code=n.code;
---Select count(distinct en.num_et) as et_cours from enseignt en;
+--Faites afficher le pourcentage des étudiants ayant une note parmi ceux qui ont suivi un cours.63.64%
+Select cast((nbNot/nbEn)*100 as decimal(4,2)) from (select count(distinct n.num_et) as nbNot from notation n, enseignt en where n.num_et=en.num_et and n.code=en.code),(select count(distinct en.num_et) as nbEn from enseignt en ) ; 
+
 Select distinct et.nom_et, AVG((Note_CC*Coeff_CC+Note_Test*Coeff_Test)/(Coeff_CC+Coeff_Test)) as moyenne, case when AVG((Note_CC*Coeff_CC+Note_Test*Coeff_Test)/(Coeff_CC+Coeff_Test))>=10 then 'Admis' else 'Ajourné' end from etudiant et, notation n , matiere m where et.num_et = n.num_et and m.code = n.code group by et.nom_et order by moyenne desc;
 Select et.nom_et, m.libelle, AVG((Note_CC*Coeff_CC+Note_Test*Coeff_Test)/(Coeff_CC+Coeff_Test)) as moyenne from etudiant et inner join enseignt en on en.num_et=et.num_et left outer join notation n on (en.num_et = n.num_et and en.code = n.code) left outer join matiere m on m.code = en.code group by et.nom_et, m.libelle order by et.nom_et;
 Select p.nom_prof, m.libelle, count(distinct et.num_et) as nb_et from Prof p, Etudiant et, Matiere m, Enseignt en where p.num_prof=en.num_prof and m.code=en.code and et.num_et=en.num_et and p.ville_prof like 'Marseille'  GROUP BY CUBE(p.nom_prof, m.libelle) order by p.nom_prof desc;
-Select m.libelle, et.annee, AVG((Note_CC*Coeff_CC+Note_Test*Coeff_Test)/(Coeff_CC+Coeff_Test)) as moyenne from Matiere m, Etudiant et, Notation n where en.code = n.code and m.code=n.code and et.num_et=n.num_et group by grouping sets ((m.libelle,et.annee),(m.libelle));
+Select m.libelle, et.annee, AVG((Note_CC*Coeff_CC+Note_Test*Coeff_Test)/(Coeff_CC+Coeff_Test)) as moyenne from Matiere m, Etudiant et, Notation n where m.code=n.code and et.num_et=n.num_et group by grouping sets ((m.libelle,et.annee),m.libelle);
+Select m.discipline, m.code, en.num_prof, sum(h_cours_rea) from Matiere m, Enseignt en where m.code = en.code group by grouping sets((m.discipline,m.code,en.num_prof), (m.discipline,m.code),m.discipline, ());
