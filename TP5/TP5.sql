@@ -1,1 +1,2 @@
-Select p.nom_prof, p.prenom_prof from prof p, enseignt en, etudiant et where and not exists(select et.num_et from etudiant et where et.annee=2 and et.groupe=1 and not exists(select * from enseignt en where en.num_et=et.num_et));
+Select distinct p.nom_prof, p.prenom_prof from prof p, enseignt en, etudiant et where not exists(select et.num_et from etudiant et where et.annee=2 and et.groupe=1 and not exists(select * from enseignt en where en.num_et=et.num_et and en.num_prof=p.num_prof));
+Select distinct et.nom_et, et.prenom_et from etudiant et, notation n where et.annee=2 and not exists(select count(n.note_test) from notation n where n.note_test<10);
